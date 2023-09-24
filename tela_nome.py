@@ -85,6 +85,7 @@ while True:
 
             # Desenhando o texto na superfície escolhida
             screen.blit(text_surface, (input_rect.x+10 - text_offset, input_rect.y+5))
+            # Centralizando o texto
             screen.blit(continue_surface, (save_rect.x + (save_rect.w - continue_surface.get_width()) // 2,
                                            save_rect.y+5))
 
