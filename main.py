@@ -1,7 +1,7 @@
 
 import pygame
 import pygame.sprite
-from Personagem import personagem
+from personagem import personagem
 
 # Inicializando o Pygame e Criando a Janela do Jogo
 
