@@ -1,11 +1,15 @@
 import pygame.sprite
 from personagem import Personagem
 from ambiente import Blockage
+from lixeira import TrashCan
 
 # Cores usadas (testes de rects)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+
+MATERIAL = ['papel', 'metal', 'vidro', 'organico', 'plastico']
+COLORS_TC = [(0, 0, 200), (255, 255, 0), (0, 200, 0), (110, 32, 32), (200, 0, 0)]
 
 # Inicializando o Pygame e Criando a Janela do Jogo
 pygame.init()
@@ -32,6 +36,37 @@ sprites_list.add(building)
 sprites_list.add(hangar)
 personagem.blockage_group = sprites_list
 
+# Criando as lixeiras
+sprites_list2 = pygame.sprite.Group()
+paper_tc = TrashCan(COLORS_TC[0], 20, 20)
+paper_tc.rect.x = 30
+paper_tc.rect.y = 30
+paper_tc.material = MATERIAL[0]
+# metal_tc = TrashCan(COLORS_TC[1], 20, 20)
+# metal_tc.rect.x = 810
+# metal_tc.rect.y = 30
+# metal_tc.material = MATERIAL[1]
+glass_tc = TrashCan(COLORS_TC[2], 20, 20)
+glass_tc.rect.x = 30
+glass_tc.rect.y = 570
+glass_tc.material = MATERIAL[2]
+organic_tc = TrashCan(COLORS_TC[3], 20, 20)
+organic_tc.rect.x = 810
+organic_tc.rect.y = 570
+organic_tc.material = MATERIAL[3]
+plastic_tc = TrashCan(COLORS_TC[4], 20, 20)
+# plastic_tc.rect.x = 420
+# plastic_tc.rect.y = 300
+plastic_tc.rect.x = 810
+plastic_tc.rect.y = 30
+plastic_tc.material = MATERIAL[4]
+sprites_list2.add(paper_tc)
+# sprites_list2.add(metal_tc)
+sprites_list2.add(glass_tc)
+sprites_list2.add(organic_tc)
+sprites_list2.add(plastic_tc)
+personagem.trashcan_group = sprites_list2
+
 # Música de fundo do jogo
 # pygame.mixer.music.load("dados/Juhani Junkala [Chiptune Adventures] 1. Stage 1.wav")
 # pygame.mixer.music.play(-1)
@@ -57,5 +92,6 @@ while gameLoop:
     display.fill([152, 250, 239])
     objectGroup.draw(display)
     sprites_list.draw(display)
+    sprites_list2.draw(display)
     pygame.display.flip()
     pygame.display.update()

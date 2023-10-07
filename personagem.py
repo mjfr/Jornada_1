@@ -11,6 +11,7 @@ class Personagem(pygame.sprite.Sprite):
         self.y_value = 0
         # Usado para receber um grupo de sprites de bloqueio
         self.blockage_group = None
+        self.trashcan_group = None
         # self.image = pygame.image.load("dados/pixil-frame-0.png")
         # self.image = pygame.transform.scale(self.image, [100, 100])
         self.image = pygame.Surface([25, 50])
@@ -18,7 +19,7 @@ class Personagem(pygame.sprite.Sprite):
 
         self.rect = pygame.Rect(50, 50, 25, 50)
 
-    # Atualiza valores das velocidades de eixo, faz a lógica de limite de tela e move o personagem
+    # Atualiza os valores das velocidades de eixo, faz a lógica de limite de tela e move o personagem
     def update(self, *args):
         # Reseta a velocidade axial (evita movimento infinito ao soltar as teclas)
         self.x_value = 0
@@ -38,6 +39,7 @@ class Personagem(pygame.sprite.Sprite):
 
         self.move(self.x_value, 0)
         self.move(0, self.y_value)
+        self.use_trashcan(keys)
 
     # Atualiza os valores de movimento e verifica sprites de bloqueio para impedir o movimento
     def move(self, x, y):
@@ -54,3 +56,8 @@ class Personagem(pygame.sprite.Sprite):
                 self.rect.bottom = block.rect.top
             if y < 0:
                 self.rect.top = block.rect.bottom
+
+    def use_trashcan(self, key):
+        for trashcan in pygame.sprite.spritecollide(self, self.trashcan_group, False):
+            if self.rect.colliderect(trashcan.rect) and key[pygame.K_e]:
+                print(trashcan.material)
