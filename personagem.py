@@ -2,7 +2,7 @@ import pygame
 
 
 class Personagem(pygame.sprite.Sprite):
-    def __init__(self, *groups):
+    def __init__(self, *groups, placar):
         super().__init__(*groups)
 
         self.speed = 9
@@ -13,6 +13,7 @@ class Personagem(pygame.sprite.Sprite):
         self.blockage_group = None
         self.trashcan_group = None
         self.holding = None
+        self.placar = placar
         self.e_key_pressed = False
         # self.image = pygame.image.load("dados/pixil-frame-0.png")
         # self.image = pygame.transform.scale(self.image, [100, 100])
@@ -67,11 +68,12 @@ class Personagem(pygame.sprite.Sprite):
                 self.rect.top = block.rect.bottom
 
     def use_trashcan(self):
-        for trashcan in pygame.sprite.spritecollide(self, self.trashcan_group, False):
-            if self.holding is not None:
-                if self.holding == trashcan.material:
-                    print("Ponto")
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_e]:
+            for trashcan in pygame.sprite.spritecollide(self, self.trashcan_group, False):
+                if self.holding is not None and self.holding == trashcan.material:
+                    self.placar.incrementar_pontuacao(1)  # Adicione 1 ponto (ou a quantidade desejada)
                     self.holding = None
                 else:
-                    print("Errou")
                     self.holding = None
+                    self.placar.decrementar_pontuacao(1)

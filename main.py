@@ -4,6 +4,7 @@ from ambiente import Blockage
 from lixeira import TrashCan
 from lixos import Trash
 import random
+from placar import Placar
 
 # Cores usadas (testes de rects)
 RED = (255, 0, 0)
@@ -30,7 +31,8 @@ pygame.display.set_caption("Recycle Rush")
 
 # Objetos
 objectGroup = pygame.sprite.Group()
-personagem = Personagem(objectGroup)
+placar = Placar()
+personagem = Personagem(objectGroup, placar=placar)
 
 # Criando os obstáculos (testes de rects) para implementar quando o design do mapa estiver completo
 sprites_list = pygame.sprite.Group()
@@ -94,6 +96,7 @@ def create_trash():
     trash_test.character_group = objectGroup
     return trash_test
 
+
 # Música de fundo do jogo
 # pygame.mixer.music.load("dados/Juhani Junkala [Chiptune Adventures] 1. Stage 1.wav")
 # pygame.mixer.music.play(-1)
@@ -127,5 +130,6 @@ while gameLoop:
     sprites_list2.draw(display)
     sprites_list3.draw(display)
     objectGroup.draw(display)
+    placar.render(display)
     pygame.display.flip()
     pygame.display.update()
