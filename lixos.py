@@ -3,17 +3,18 @@ import random
 
 
 class Trash(pygame.sprite.Sprite):
-    def __init__(self, color, width, height, blockage_group, trash_can_group):
+    def __init__(self, image, width, height, blockage_group, trash_can_group):
         super().__init__()
 
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
+        self.image = pygame.image.load(image).convert_alpha()
+        # TODO: Ponderar sobre o tamanho ideal para o lixo
+        img_width = self.image.get_width()
+        img_height = self.image.get_height()
+        self.image = pygame.transform.scale(self.image, (38, 33))
         self.blockage_group = blockage_group
         self.trash_can_group = trash_can_group
         self.character_group = None
         self.material = None
-
-        pygame.draw.rect(self.image, color, pygame.Rect(0, 0, width, height))
 
         self.rect = self.image.get_rect()
         self.spawn_trash()

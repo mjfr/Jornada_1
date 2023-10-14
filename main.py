@@ -3,14 +3,25 @@ from personagem import Personagem
 from ambiente import Blockage
 from lixeira import TrashCan
 from lixos import Trash
+import random
 
 # Cores usadas (testes de rects)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-MATERIAL = ['papel', 'metal', 'vidro', 'organico', 'plastico']
-COLORS_TC = [(0, 0, 200), (255, 255, 0), (0, 200, 0), (110, 32, 32), (200, 0, 0)]
+MATERIAL = ['papel', 'vidro', 'organico', 'plastico']
+COLORS_TC = [(0, 0, 200), (0, 200, 0), (110, 32, 32), (200, 0, 0)]
+PAPER_IMG = {0: 'sprites/papel0.png', 1: 'sprites/papel1.png', 2: 'sprites/papel2.png'}
+GLASS_IMG = {0: 'sprites/vidro0.png', 1: 'sprites/vidro1.png', 2: 'sprites/vidro2.png'}
+ORGANIC_IMG = {0: 'sprites/organico0.png', 1: 'sprites/organico1.png', 2: 'sprites/organico2.png'}
+PLASTIC_IMG = {0: 'sprites/plastico0.png', 1: 'sprites/plastico1.png', 2: 'sprites/plastico2.png'}
+MATERIAL_IMG = [PAPER_IMG, GLASS_IMG, ORGANIC_IMG, PLASTIC_IMG]
+MATERIAL_DICT = dict(zip(MATERIAL, MATERIAL_IMG))
+
+# Utilizado para testes
+# MATERIAL = ['papel', 'metal', 'vidro', 'organico', 'plastico']
+# COLORS_TC = [(0, 0, 200), (255, 255, 0), (0, 200, 0), (110, 32, 32), (200, 0, 0)]
 
 # Inicializando o Pygame e Criando a Janela do Jogo
 pygame.init()
@@ -39,28 +50,30 @@ personagem.blockage_group = sprites_list
 
 # Criando as lixeiras
 sprites_list2 = pygame.sprite.Group()
-paper_tc = TrashCan(COLORS_TC[0], 32, 46, 'sprites/lixeira_papel.png')
+paper_tc = TrashCan(32, 46, 'sprites/lixeira_papel.png')
 paper_tc.rect.x = 30
 paper_tc.rect.y = 30
 paper_tc.material = MATERIAL[0]
 # metal_tc = TrashCan(COLORS_TC[1], 20, 20)
-# metal_tc.rect.x = 810
-# metal_tc.rect.y = 30
 # metal_tc.material = MATERIAL[1]
-glass_tc = TrashCan(COLORS_TC[2], 32, 46, 'sprites/lixeira_vidro.png')
+glass_tc = TrashCan(32, 46, 'sprites/lixeira_vidro.png')
+# glass_tc = TrashCan(COLORS_TC[2], 32, 46, 'sprites/lixeira_vidro.png')
 glass_tc.rect.x = 30
 glass_tc.rect.y = 530
-glass_tc.material = MATERIAL[2]
-organic_tc = TrashCan(COLORS_TC[3], 32, 46, 'sprites/lixeira_organica.png')
+glass_tc.material = MATERIAL[1]
+# glass_tc.material = MATERIAL[2]
+organic_tc = TrashCan(32, 46, 'sprites/lixeira_organica.png')
+# organic_tc = TrashCan(COLORS_TC[3], 32, 46, 'sprites/lixeira_organica.png')
 organic_tc.rect.x = 780
 organic_tc.rect.y = 530
-organic_tc.material = MATERIAL[3]
-plastic_tc = TrashCan(COLORS_TC[4], 32, 46, 'sprites/lixeira_plastico.png')
-# plastic_tc.rect.x = 420
-# plastic_tc.rect.y = 300
+organic_tc.material = MATERIAL[2]
+# organic_tc.material = MATERIAL[3]
+plastic_tc = TrashCan(32, 46, 'sprites/lixeira_plastico.png')
+# plastic_tc = TrashCan(COLORS_TC[4], 32, 46, 'sprites/lixeira_plastico.png')
 plastic_tc.rect.x = 780
 plastic_tc.rect.y = 30
-plastic_tc.material = MATERIAL[4]
+plastic_tc.material = MATERIAL[3]
+# plastic_tc.material = MATERIAL[4]
 sprites_list2.add(paper_tc)
 # sprites_list2.add(metal_tc)
 sprites_list2.add(glass_tc)
@@ -74,8 +87,10 @@ sprites_list3 = pygame.sprite.Group()
 # Função para criar uma nova instância de lixo
 def create_trash():
     # TODO: Fazer o lixo spawnar com o material aleatório
-    trash_test = Trash(COLORS_TC[2], 20, 20, sprites_list, sprites_list2)
-    trash_test.material = MATERIAL[2]
+    rng = random.randint(0, 3)
+    rng_img = random.randint(0, 2)
+    trash_test = Trash(MATERIAL_IMG[rng][rng_img], 20, 20, sprites_list, sprites_list2)
+    trash_test.material = MATERIAL[rng]
     trash_test.character_group = objectGroup
     return trash_test
 
