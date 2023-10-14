@@ -6,6 +6,7 @@ from lixos import Trash
 from placar import Placar
 
 
+
 # Cores usadas (testes de rects)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -82,11 +83,6 @@ def create_trash():
     trash_test.character_group = objectGroup
     return trash_test
 
-#placar do jogo
-
-placar.incrementar_pontuacao(10)
-pontuacao_atual = placar.obter_pontuacao()
-placar.reset()
 
 # Música de fundo do jogo
 # pygame.mixer.music.load("dados/Juhani Junkala [Chiptune Adventures] 1. Stage 1.wav")

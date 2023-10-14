@@ -20,3 +20,6 @@ class Placar:
     def render(self, tela):
         texto = self.fonte.render(f'Pontuação: {self.pontuacao}', True, (0, 0, 0))
         tela.blit(texto, (320, 10))  # Ajuste as coordenadas (320, 10) conforme necessário
+
+    def decrementar_pontuacao(self,pontos):
+        self.pontuacao -= pontos

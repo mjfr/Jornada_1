@@ -67,7 +67,6 @@ class Personagem(pygame.sprite.Sprite):
             if y < 0:
                 self.rect.top = block.rect.bottom
 
-
     def use_trashcan(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_e]:
@@ -75,3 +74,6 @@ class Personagem(pygame.sprite.Sprite):
                 if self.holding is not None and self.holding == trashcan.material:
                     self.placar.incrementar_pontuacao(1)  # Adicione 1 ponto (ou a quantidade desejada)
                     self.holding = None
+                else:
+                    self.holding = None
+                    self.placar.decrementar_pontuacao(1)
