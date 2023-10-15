@@ -18,7 +18,9 @@ GLASS_IMG = {0: 'sprites/vidro0.png', 1: 'sprites/vidro1.png', 2: 'sprites/vidro
 ORGANIC_IMG = {0: 'sprites/organico0.png', 1: 'sprites/organico1.png', 2: 'sprites/organico2.png'}
 PLASTIC_IMG = {0: 'sprites/plastico0.png', 1: 'sprites/plastico1.png', 2: 'sprites/plastico2.png'}
 MATERIAL_IMG = [PAPER_IMG, GLASS_IMG, ORGANIC_IMG, PLASTIC_IMG]
-MATERIAL_DICT = dict(zip(MATERIAL, MATERIAL_IMG))
+# MATERIAL_DICT = dict(zip(MATERIAL, MATERIAL_IMG))
+
+background = pygame.image.load('sprites/mapa_pronto.png')
 
 # Utilizado para testes
 # MATERIAL = ['papel', 'metal', 'vidro', 'organico', 'plastico']
@@ -26,7 +28,7 @@ MATERIAL_DICT = dict(zip(MATERIAL, MATERIAL_IMG))
 
 # Inicializando o Pygame e Criando a Janela do Jogo
 pygame.init()
-display = pygame.display.set_mode([840, 600])
+display = pygame.display.set_mode([1000, 800])
 pygame.display.set_caption("Recycle Rush")
 
 # Objetos
@@ -34,53 +36,37 @@ objectGroup = pygame.sprite.Group()
 placar = Placar()
 personagem = Personagem(objectGroup, placar=placar)
 
-# Criando os obstáculos (testes de rects) para implementar quando o design do mapa estiver completo
+# Criando os espaços dos obstáculos (casas e carros)
 sprites_list = pygame.sprite.Group()
-house = Blockage(RED, 80, 50)
-house.rect.x = 100
-house.rect.y = 300
-building = Blockage(GREEN, 125, 200)
-building.rect.x = 250
-building.rect.y = 100
-hangar = Blockage(BLUE, 300, 100)
-hangar.rect.x = 450
-hangar.rect.y = 300
-sprites_list.add(house)
-sprites_list.add(building)
-sprites_list.add(hangar)
+blockages = [
+    Blockage(RED, 190, 163, x=60),
+    Blockage(RED, 58, 68, x=310),
+    Blockage(RED, 145, 154, x=437),
+    Blockage(RED, 209, 156, x=722),
+    Blockage(RED, 100, 38, x=537, y=220),
+    Blockage(RED, 186, 157, x=48, y=290),
+    Blockage(RED, 167, 135, x=424, y=310),
+    Blockage(RED, 180, 145, x=791, y=296),
+    Blockage(RED, 178, 166, x=44, y=589),
+    Blockage(RED, 152, 166, x=416, y=589),
+    Blockage(RED, 56, 40, x=633, y=641),
+    Blockage(RED, 200, 166, x=800, y=589),
+    Blockage(RED, 98, 40, x=260, y=498)
+    ]
+for block in blockages:
+    sprites_list.add(block)
 personagem.blockage_group = sprites_list
 
 # Criando as lixeiras
 sprites_list2 = pygame.sprite.Group()
-paper_tc = TrashCan(32, 46, 'sprites/lixeira_papel.png')
-paper_tc.rect.x = 30
-paper_tc.rect.y = 30
-paper_tc.material = MATERIAL[0]
-# metal_tc = TrashCan(COLORS_TC[1], 20, 20)
-# metal_tc.material = MATERIAL[1]
-glass_tc = TrashCan(32, 46, 'sprites/lixeira_vidro.png')
-# glass_tc = TrashCan(COLORS_TC[2], 32, 46, 'sprites/lixeira_vidro.png')
-glass_tc.rect.x = 30
-glass_tc.rect.y = 530
-glass_tc.material = MATERIAL[1]
-# glass_tc.material = MATERIAL[2]
-organic_tc = TrashCan(32, 46, 'sprites/lixeira_organica.png')
-# organic_tc = TrashCan(COLORS_TC[3], 32, 46, 'sprites/lixeira_organica.png')
-organic_tc.rect.x = 780
-organic_tc.rect.y = 530
-organic_tc.material = MATERIAL[2]
-# organic_tc.material = MATERIAL[3]
-plastic_tc = TrashCan(32, 46, 'sprites/lixeira_plastico.png')
-# plastic_tc = TrashCan(COLORS_TC[4], 32, 46, 'sprites/lixeira_plastico.png')
-plastic_tc.rect.x = 780
-plastic_tc.rect.y = 30
-plastic_tc.material = MATERIAL[3]
-# plastic_tc.material = MATERIAL[4]
-sprites_list2.add(paper_tc)
-# sprites_list2.add(metal_tc)
-sprites_list2.add(glass_tc)
-sprites_list2.add(organic_tc)
-sprites_list2.add(plastic_tc)
+trashcans = [
+    TrashCan(32, 46, 'sprites/lixeira_papel.png', x_flip=1, x=2, y=175, material=MATERIAL[0]),
+    TrashCan(32, 46, 'sprites/lixeira_vidro.png', x_flip=1, x=2, y=530, material=MATERIAL[1]),
+    TrashCan(32, 46, 'sprites/lixeira_organica.png', x=965, y=530, material=MATERIAL[2]),
+    TrashCan(32, 46, 'sprites/lixeira_plastico.png', x=965, y=175, material=MATERIAL[3])
+    ]
+for trashcan in trashcans:
+    sprites_list2.add(trashcan)
 personagem.trashcan_group = sprites_list2
 
 sprites_list3 = pygame.sprite.Group()
@@ -125,8 +111,9 @@ while gameLoop:
     sprites_list3.update()
 
     # Draw:
-    display.fill([152, 250, 239])
+    # display.fill([152, 250, 239])
     sprites_list.draw(display)
+    display.blit(background, (0, 0))
     sprites_list2.draw(display)
     sprites_list3.draw(display)
     objectGroup.draw(display)

@@ -15,12 +15,12 @@ class Personagem(pygame.sprite.Sprite):
         self.holding = None
         self.placar = placar
         self.e_key_pressed = False
-        # self.image = pygame.image.load("dados/pixil-frame-0.png")
-        # self.image = pygame.transform.scale(self.image, [100, 100])
-        self.image = pygame.Surface([25, 50])
-        self.image.fill((220, 135, 79))
+        self.image = pygame.image.load("dados/pixil-frame-0.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, [25, 50])
+        # self.image = pygame.Surface([25, 50])
+        # self.image.fill((220, 135, 79))
 
-        self.rect = pygame.Rect(50, 50, 25, 50)
+        self.rect = pygame.Rect(360, 370, 25, 50)
 
     # Atualiza os valores das velocidades de eixo, faz a lógica de limite de tela e move o personagem
     def update(self):
@@ -32,13 +32,13 @@ class Personagem(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
 
         # Limites da janela
-        if keys[pygame.K_d] and not self.rect.right >= 840:
+        if keys[pygame.K_d] and not self.rect.right >= 1000:
             self.x_value = self.speed
         if keys[pygame.K_a] and not self.rect.left <= 0:
             self.x_value = -self.speed
         if keys[pygame.K_w] and not self.rect.top <= 0:
             self.y_value = -self.speed
-        if keys[pygame.K_s] and not self.rect.bottom >= 600:
+        if keys[pygame.K_s] and not self.rect.bottom >= 805:
             self.y_value = self.speed
 
         self.move(self.x_value, 0)
