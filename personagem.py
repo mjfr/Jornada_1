@@ -9,12 +9,13 @@ class Personagem(pygame.sprite.Sprite):
         # Valores de velocidade para eixos
         self.x_value = 0
         self.y_value = 0
-        # Usado para receber um grupo de sprites de bloqueio
+        # Usado para receber um grupo de assets de bloqueio
         self.blockage_group = None
         self.trashcan_group = None
         self.holding = None
         self.placar = placar
         self.e_key_pressed = False
+        self.life = 3
         self.image = pygame.image.load("dados/pixil-frame-0.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, [25, 50])
         # self.image = pygame.Surface([25, 50])
@@ -51,12 +52,12 @@ class Personagem(pygame.sprite.Sprite):
         else:
             self.e_key_pressed = False
 
-    # Atualiza os valores de movimento e verifica sprites de bloqueio para impedir o movimento
+    # Atualiza os valores de movimento e verifica assets de bloqueio para impedir o movimento
     def move(self, x, y):
         self.rect.x += x
         self.rect.y += y
 
-        # Pega cada bloqueio dentro do grupo de sprites e impede a movimentação em cada um deles
+        # Pega cada bloqueio dentro do grupo de assets e impede a movimentação em cada um deles
         for block in pygame.sprite.spritecollide(self, self.blockage_group, False):
             if x > 0:
                 self.rect.right = block.rect.left
@@ -71,9 +72,11 @@ class Personagem(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_e]:
             for trashcan in pygame.sprite.spritecollide(self, self.trashcan_group, False):
-                if self.holding is not None and self.holding == trashcan.material:
+                if self.holding == trashcan.material:
                     self.placar.incrementar_pontuacao(1)  # Adicione 1 ponto (ou a quantidade desejada)
                     self.holding = None
-                else:
+                elif self.holding is not None:
                     self.holding = None
                     self.placar.decrementar_pontuacao(1)
+                    self.life -= 1
+                    print(f'Vidas: {self.life}')
