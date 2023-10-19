@@ -1,5 +1,5 @@
 import os.path
-
+import csv
 import pygame
 import sys
 from personagem import Personagem
@@ -10,11 +10,10 @@ from placar import Placar
 from botao import Button
 import random
 
-# Cores usadas (testes de rects)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-
+RANKING_FONT = pygame.font.Font('assets/pixeloid_sans.ttf', 18)
 MATERIAL = ['papel', 'vidro', 'organico', 'plastico']
 COLORS_TC = [(0, 0, 200), (0, 200, 0), (110, 32, 32), (200, 0, 0)]
 PAPER_IMG = {0: 'assets/papel0.png', 1: 'assets/papel1.png', 2: 'assets/papel2.png'}
@@ -22,13 +21,7 @@ GLASS_IMG = {0: 'assets/vidro0.png', 1: 'assets/vidro1.png', 2: 'assets/vidro2.p
 ORGANIC_IMG = {0: 'assets/organico0.png', 1: 'assets/organico1.png', 2: 'assets/organico2.png'}
 PLASTIC_IMG = {0: 'assets/plastico0.png', 1: 'assets/plastico1.png', 2: 'assets/plastico2.png'}
 MATERIAL_IMG = [PAPER_IMG, GLASS_IMG, ORGANIC_IMG, PLASTIC_IMG]
-# MATERIAL_DICT = dict(zip(MATERIAL, MATERIAL_IMG))
-
-background = pygame.image.load('assets/mapa_pronto.png')
-
-# Utilizado para testes
-# MATERIAL = ['papel', 'metal', 'vidro', 'organico', 'plastico']
-# COLORS_TC = [(0, 0, 200), (255, 255, 0), (0, 200, 0), (110, 32, 32), (200, 0, 0)]
+BACKGROUND = pygame.image.load('assets/mapa_pronto.png')
 
 # Inicializando o Pygame e Criando a Janela do Jogo
 pygame.init()
@@ -114,7 +107,7 @@ def play():
 
         # Draw:
         sprites_list.draw(display)
-        display.blit(background, (0, 0))
+        display.blit(BACKGROUND, (0, 0))
         sprites_list2.draw(display)
         sprites_list3.draw(display)
         object_group.draw(display)
@@ -124,6 +117,75 @@ def play():
 
         if personagem.life == 0:
             name_screen(personagem.placar.pontuacao)
+
+
+def ranking():
+    player_data = []
+    sorted_players = []
+    if os.path.exists('save.csv'):
+        with open('save.csv', 'r', encoding='utf8') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                player = {
+                    'Nome': row['Nome'],
+                    'Pontuação': int(row['Pontuação']),
+                }
+                player_data.append(player)
+        sorted_players = sorted(player_data, key=lambda x: x['Pontuação'], reverse=True)
+
+    title = (pygame.font.Font('assets/pixeloid_sans.ttf', 70)
+             .render('Ranking', True, '#FFA756'))
+    title_rect = title.get_rect(center=(500, 50))
+    menu_button = Button(None, 500, 750, "Main Menu", 'assets/pixeloid_sans.ttf', 30,
+                         "#FFA756", "White")
+    next_page_button = Button(None, 700, 400, "-->", 'assets/pixeloid_sans.ttf', 30,
+                              "#FFA756", "White")
+    prev_page_button = Button(None, 300, 400, "<--", 'assets/pixeloid_sans.ttf', 30,
+                              "#FFA756", "White")
+    current_page = 0
+    players_per_page = 15
+    players_amount = len(sorted_players)
+
+
+    while True:
+        display.fill((42, 1, 52))
+        display.blit(title, title_rect)
+
+        current_index = current_page * players_per_page
+        final_index = (current_page + 1) * players_per_page
+
+        if final_index > players_amount:
+            final_index = players_amount
+
+        y = 200
+        for rank, player in enumerate(sorted_players[current_index:final_index], start=current_index + 1):
+            player_text = f'{rank}. {player["Nome"]}: {player["Pontuação"]}'
+            player_rendered = RANKING_FONT.render(player_text, True, '#FFA756')
+            display.blit(player_rendered, player_rendered.get_rect(center=(500, y)))
+            y += 30
+
+        page_render = RANKING_FONT.render(f'Página {current_page}', True, '#FFA756')
+        display.blit(page_render, page_render.get_rect(center=(500, 700)))
+
+        mouse_pos = pygame.mouse.get_pos()
+        for button in [menu_button, next_page_button, prev_page_button]:
+            button.change_color(mouse_pos)
+            button.update(display)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if menu_button.check_click(mouse_pos):
+                    main_menu()
+                if next_page_button.check_click(mouse_pos):
+                    if final_index < len(sorted_players):
+                        current_page += 1
+                if prev_page_button.check_click(mouse_pos):
+                    if current_page > 0:
+                        current_page -= 1
+        pygame.display.update()
 
 
 def name_screen(points):
@@ -184,9 +246,9 @@ def name_screen(points):
                     if save_rect.check_click(event.pos):
                         # Apenas por testes: abrindo um arquivo no modo append
                         if not os.path.exists('save.csv'):
-                            with open(file='save.csv', mode='a+', encoding='utf-8') as file:
-                                file.write('Nome, Pontuação\n')
-                        with open(file='save.csv', mode='a+', encoding='utf-8') as file:
+                            with open(file='save.csv', mode='a+', encoding='utf8') as file:
+                                file.write('Nome,Pontuação\n')
+                        with open(file='save.csv', mode='a+', encoding='utf8') as file:
                             # Salvando o nome do jogador e sua pontuação
                             file.write(f'{user_text}, {points}\n')
                         saved = True
@@ -220,6 +282,8 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if play_button.check_click(menu_mouse_pos):
                     play()
+                if ranking_button.check_click(menu_mouse_pos):
+                    ranking()
                 if quit_button.check_click(menu_mouse_pos):
                     pygame.quit()
                     sys.exit()
