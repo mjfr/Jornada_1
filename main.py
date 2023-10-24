@@ -10,10 +10,15 @@ from placar import Placar
 from botao import Button
 import random
 
+# TODO: Adicionar sprites aos botões (menu, tela de nome, ranking)
+# TODO: Refatorar o código se possível
+# TODO: Melhorar a visibilidade do placar
+# TODO:
+
+
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-RANKING_FONT = pygame.font.Font('assets/pixeloid_sans.ttf', 18)
 MATERIAL = ['papel', 'vidro', 'organico', 'plastico']
 COLORS_TC = [(0, 0, 200), (0, 200, 0), (110, 32, 32), (200, 0, 0)]
 PAPER_IMG = {0: 'assets/papel0.png', 1: 'assets/papel1.png', 2: 'assets/papel2.png'}
@@ -25,6 +30,7 @@ BACKGROUND = pygame.image.load('assets/mapa_pronto.png')
 
 # Inicializando o Pygame e Criando a Janela do Jogo
 pygame.init()
+RANKING_FONT = pygame.font.Font('assets/pixeloid_sans.ttf', 18)
 display = pygame.display.set_mode([1000, 800])
 pygame.display.set_caption("Recycle Rush")
 
@@ -38,14 +44,14 @@ def play():
     # Criando os espaços dos obstáculos (casas e carros)
     sprites_list = pygame.sprite.Group()
     blockages = [
-        Blockage(RED, 190, 163, x=60),
+        Blockage(RED, 190, 156, x=60),
         Blockage(RED, 58, 68, x=310),
-        Blockage(RED, 145, 154, x=437),
+        Blockage(RED, 145, 156, x=437),
         Blockage(RED, 209, 156, x=722),
-        Blockage(RED, 100, 38, x=537, y=220),
-        Blockage(RED, 186, 150, x=48, y=310),
-        Blockage(RED, 167, 135, x=424, y=310),
-        Blockage(RED, 180, 145, x=791, y=296),
+        Blockage(RED, 100, 35, x=537, y=220),
+        Blockage(RED, 186, 135, x=48, y=306),
+        Blockage(RED, 167, 135, x=424, y=306),
+        Blockage(RED, 180, 135, x=791, y=306),
         Blockage(RED, 178, 166, x=44, y=589),
         Blockage(RED, 152, 166, x=416, y=589),
         Blockage(RED, 56, 40, x=633, y=641),
@@ -72,7 +78,6 @@ def play():
 
     # Função para criar uma nova instância de lixo
     def create_trash():
-        # TODO: Fazer o lixo spawnar com o material aleatório
         rng = random.randint(0, 3)
         rng_img = random.randint(0, 2)
         trash_test = Trash(MATERIAL_IMG[rng][rng_img], 20, 20, sprites_list, sprites_list2)
@@ -83,9 +88,6 @@ def play():
     # Música de fundo do jogo
     pygame.mixer.music.load("assets/Juhani Junkala [Chiptune Adventures] 1. Stage 1.wav")
     pygame.mixer.music.play(-1)
-
-    # Efeitos sonoros
-    # andando = pygame.mixer.Sound("dados/Fantozzi-StoneR1.FLAC")
 
     clock = pygame.time.Clock()
 
@@ -146,7 +148,6 @@ def ranking():
     players_per_page = 15
     players_amount = len(sorted_players)
 
-
     while True:
         display.fill((42, 1, 52))
         display.blit(title, title_rect)
@@ -159,9 +160,12 @@ def ranking():
 
         y = 200
         for rank, player in enumerate(sorted_players[current_index:final_index], start=current_index + 1):
-            player_text = f'{rank}. {player["Nome"]}: {player["Pontuação"]}'
+            player_text = f'{rank}. {player["Nome"]}:'
+            player_points_text = f'{player["Pontuação"]}pts'
             player_rendered = RANKING_FONT.render(player_text, True, '#FFA756')
-            display.blit(player_rendered, player_rendered.get_rect(center=(500, y)))
+            player_points_rendered = RANKING_FONT.render(player_points_text, True, '#FFA756')
+            display.blit(player_rendered, player_rendered.get_rect(topleft=(350, y)))
+            display.blit(player_points_rendered, player_points_rendered.get_rect(topright=(650, y)))
             y += 30
 
         page_render = RANKING_FONT.render(f'Página {current_page}', True, '#FFA756')
@@ -189,6 +193,7 @@ def ranking():
 
 
 def name_screen(points):
+    pygame.mixer.music.stop()
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 100)
              .render('Salvar Partida', True, '#FFA756'))
     title_rect = title.get_rect(center=(500, 100))
