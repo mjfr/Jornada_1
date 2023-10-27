@@ -10,8 +10,8 @@ from placar import Placar
 from botao import Button
 import random
 
-# TODO: Adicionar sprites aos botões (menu, tela de nome, ranking)
-# TODO: Refatorar o código se possível
+# TODO: Adicionar sprites aos botões (menu, tela de nome, ranking) [em progresso]
+# TODO: Refatorar o código se possível [em progresso]
 # TODO: Melhorar a visibilidade do placar
 # TODO:
 
@@ -168,12 +168,12 @@ def ranking():
             display.blit(player_points_rendered, player_points_rendered.get_rect(topright=(650, y)))
             y += 30
 
-        page_render = RANKING_FONT.render(f'Página {current_page}', True, '#FFA756')
+        page_render = RANKING_FONT.render(f'Página {current_page+1}', True, '#FFA756')
         display.blit(page_render, page_render.get_rect(center=(500, 700)))
 
         mouse_pos = pygame.mouse.get_pos()
         for button in [menu_button, next_page_button, prev_page_button]:
-            button.change_color(mouse_pos)
+            button.change_state(mouse_pos)
             button.update(display)
 
         for event in pygame.event.get():
@@ -205,8 +205,6 @@ def name_screen(points):
     # Ao salvar o nome, saved = True
     saved = False
 
-    name_frame = pygame.image.load('assets/nome_retangulo.png').convert_alpha()
-
     while True:
         mouse_pos = pygame.mouse.get_pos()
         # Obtendo eventos que ocorrem no jogo
@@ -229,8 +227,8 @@ def name_screen(points):
                     user_text += event.unicode
 
             if not saved:
-                input_rect = Button(name_frame, 500, 250, user_text, 'assets/pixeloid_sans.ttf', 26,
-                                    "#FFA756", "#FFA756")
+                input_rect = Button('assets/nome_retangulo.png', 500, 250, user_text, 'assets/pixeloid_sans.ttf', 26,
+                                    "#FFA756", "#FFA756", (400, 70), 'assets/nome_retangulo.png')
                 save_rect = Button(None, 500, 400, "Continuar", 'assets/pixeloid_sans.ttf',
                                    50, "#FFA756", "White")
 
@@ -242,7 +240,7 @@ def name_screen(points):
                         active = False
 
                 for button in [input_rect, save_rect]:
-                    button.change_color(mouse_pos)
+                    button.change_state(mouse_pos)
                     button.update(display)
 
                 # Se o nome possuir um ou mais caracteres
@@ -264,20 +262,20 @@ def name_screen(points):
 def main_menu():
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 100)
              .render('Recycle Rush', True, '#FFA756'))
-    title_rect = title.get_rect(center=(500, 100))
-    play_button = Button(None, 500, 250, "PLAY", 'assets/pixeloid_sans.ttf', 50,
-                         "#FFA756", "White")
-    ranking_button = Button(None, 500, 400, "RANKING", 'assets/pixeloid_sans.ttf', 50,
-                            "#FFA756", "White")
-    quit_button = Button(None, 500, 550, "QUIT", 'assets/pixeloid_sans.ttf', 50,
-                         "#FFA756", "White")
+    title_rect = title.get_rect(center=(500, 200))
+    play_button = Button('assets/btn_jogar1.png', 500, 400, None, 'assets/pixeloid_sans.ttf', 50,
+                         "#FFA756", "white", (440, 135), 'assets/btn_jogar2.png')
+    ranking_button = Button('assets/btn_ranking1.png', 50, 50, None, 'assets/pixeloid_sans.ttf', 50,
+                            "#FFA756", "white", (70, 70), 'assets/btn_ranking2.png')
+    quit_button = Button('assets/btn_shutdown1.png', 950, 750, None, 'assets/pixeloid_sans.ttf', 50,
+                         "#FFA756", "white", (70, 70), 'assets/btn_shutdown2.png')
     while True:
         menu_mouse_pos = pygame.mouse.get_pos()
         display.fill((42, 1, 52))
         display.blit(title, title_rect)
 
         for button in [play_button, ranking_button, quit_button]:
-            button.change_color(menu_mouse_pos)
+            button.change_state(menu_mouse_pos)
             button.update(display)
 
         for event in pygame.event.get():
