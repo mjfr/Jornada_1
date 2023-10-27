@@ -73,6 +73,8 @@ class Personagem(pygame.sprite.Sprite):
         else:
             self.e_key_pressed = False
 
+        self.placar.life = self.life
+
     # Atualiza os valores de movimento e verifica assets de bloqueio para impedir o movimento
     def move(self, x, y):
         self.rect.x += x
