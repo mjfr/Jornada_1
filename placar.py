@@ -1,4 +1,5 @@
 import pygame
+from txtbtn import TxtBtn
 
 
 class Placar:
@@ -18,10 +19,13 @@ class Placar:
         self.pontuacao = 0
 
     def render(self, tela):
-        points_txt = self.fonte.render(f'Pontuação: {self.pontuacao}', True, (0, 255, 255))
-        tela.blit(points_txt, points_txt.get_rect(center=(500, 30)))
-        life_txt = self.fonte.render(f'Vidas: {self.life}', True, (0, 255, 255))
-        tela.blit(life_txt, life_txt.get_rect(center=(150, 30)))
+        points_txt = TxtBtn('assets/nome_retangulo.png', 500, 30, f'Pontuação: {self.pontuacao}',
+                            'assets/pixeloid_sans.ttf', 26, (0, 0, 0), (0, 0, 0), (250, 40),
+                            'assets/nome_retangulo.png')
+        life_txt = TxtBtn('assets/nome_retangulo.png', 150, 30, f'Vidas: {self.life}', 'assets/pixeloid_sans.ttf', 26,
+                          (255, 0, 0), (255, 0, 0), (150, 40), 'assets/nome_retangulo.png')
+        for text in [points_txt, life_txt]:
+            text.update(tela)
 
     def decrementar_pontuacao(self, pontos):
         self.pontuacao -= pontos

@@ -7,25 +7,24 @@ from ambiente import Blockage
 from lixeira import TrashCan
 from lixos import Trash
 from placar import Placar
-from botao import Button
+from txtbtn import TxtBtn
 import random
 
-# TODO: Adicionar sprites aos botões (menu, tela de nome, ranking) [em progresso]
 # TODO: Refatorar o código se possível [em progresso]
-# TODO: Melhorar a visibilidade do placar
-# TODO:
+# TODO: TALVEZ a namescreen possa ser passada para uma classe
 
-
+# Cores para testes/debug
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+# Lista e dicionários auxiliares para setar imagens e randomizar os lixos
 MATERIAL = ['papel', 'vidro', 'organico', 'plastico']
-COLORS_TC = [(0, 0, 200), (0, 200, 0), (110, 32, 32), (200, 0, 0)]
 PAPER_IMG = {0: 'assets/papel0.png', 1: 'assets/papel1.png', 2: 'assets/papel2.png'}
 GLASS_IMG = {0: 'assets/vidro0.png', 1: 'assets/vidro1.png', 2: 'assets/vidro2.png'}
 ORGANIC_IMG = {0: 'assets/organico0.png', 1: 'assets/organico1.png', 2: 'assets/organico2.png'}
 PLASTIC_IMG = {0: 'assets/plastico0.png', 1: 'assets/plastico1.png', 2: 'assets/plastico2.png'}
 MATERIAL_IMG = [PAPER_IMG, GLASS_IMG, ORGANIC_IMG, PLASTIC_IMG]
+
 BACKGROUND = pygame.image.load('assets/mapa_pronto.png')
 
 # Inicializando o Pygame e Criando a Janela do Jogo
@@ -36,7 +35,7 @@ pygame.display.set_caption("Recycle Rush")
 
 
 def play():
-    # Objetos
+    # Instanciando o jogador e o placar
     object_group = pygame.sprite.Group()
     placar = Placar()
     personagem = Personagem(object_group, placar=placar)
@@ -44,20 +43,21 @@ def play():
     # Criando os espaços dos obstáculos (casas e carros)
     sprites_list = pygame.sprite.Group()
     blockages = [
-        Blockage(RED, 190, 156, x=60),
-        Blockage(RED, 58, 68, x=310),
-        Blockage(RED, 145, 156, x=437),
-        Blockage(RED, 209, 156, x=722),
+        Blockage(RED, 149, 147, x=70),
+        Blockage(RED, 207, 149, x=360),
+        Blockage(RED, 178, 156, x=698),
+        Blockage(RED, 53, 39, x=945, y=20),
         Blockage(RED, 100, 35, x=537, y=220),
         Blockage(RED, 186, 135, x=48, y=306),
         Blockage(RED, 167, 135, x=424, y=306),
         Blockage(RED, 180, 135, x=791, y=306),
-        Blockage(RED, 178, 166, x=44, y=589),
-        Blockage(RED, 152, 166, x=416, y=589),
-        Blockage(RED, 56, 40, x=633, y=641),
-        Blockage(RED, 200, 166, x=800, y=589),
+        Blockage(RED, 191, 157, x=0, y=589),
+        Blockage(RED, 140, 135, x=368, y=620),
+        Blockage(RED, 53, 39, x=579, y=641),
+        Blockage(RED, 162, 135, x=683, y=620),
         Blockage(RED, 98, 40, x=260, y=498)
         ]
+    # Adicionando os bloqueios na lista de sprites
     for block in blockages:
         sprites_list.add(block)
     personagem.blockage_group = sprites_list
@@ -67,9 +67,11 @@ def play():
     trashcans = [
         TrashCan(32, 46, 'assets/lixeira_papel.png', x_flip=1, x=2, y=175, material=MATERIAL[0]),
         TrashCan(32, 46, 'assets/lixeira_vidro.png', x_flip=1, x=2, y=530, material=MATERIAL[1]),
-        TrashCan(32, 46, 'assets/lixeira_organica.png', x=965, y=530, material=MATERIAL[2]),
-        TrashCan(32, 46, 'assets/lixeira_plastico.png', x=965, y=175, material=MATERIAL[3])
+        TrashCan(32, 46, 'assets/lixeira_organica.png', x=905, y=750, material=MATERIAL[2]),
+        TrashCan(32, 46, 'assets/lixeira_plastico.png', x=905, y=175, material=MATERIAL[3])
         ]
+
+    # Adicionando as lixeiras na lista de sprites
     for trashcan in trashcans:
         sprites_list2.add(trashcan)
     personagem.trashcan_group = sprites_list2
@@ -80,10 +82,10 @@ def play():
     def create_trash():
         rng = random.randint(0, 3)
         rng_img = random.randint(0, 2)
-        trash_test = Trash(MATERIAL_IMG[rng][rng_img], 20, 20, sprites_list, sprites_list2)
-        trash_test.material = MATERIAL[rng]
-        trash_test.character_group = object_group
-        return trash_test
+        trash = Trash(MATERIAL_IMG[rng][rng_img], 20, 20, sprites_list, sprites_list2)
+        trash.material = MATERIAL[rng]
+        trash.character_group = object_group
+        return trash
 
     # Música de fundo do jogo
     pygame.mixer.music.load("assets/Juhani Junkala [Chiptune Adventures] 1. Stage 1.wav")
@@ -111,9 +113,9 @@ def play():
         sprites_list.draw(display)
         display.blit(BACKGROUND, (0, 0))
         sprites_list2.draw(display)
+        placar.render(display)
         sprites_list3.draw(display)
         object_group.draw(display)
-        placar.render(display)
         pygame.display.flip()
         pygame.display.update()
 
@@ -124,6 +126,7 @@ def play():
 def ranking():
     player_data = []
     sorted_players = []
+    # Se o arquivo de save existir, abre o arquivo e cria um dicionário para o player adicionando em uma lista
     if os.path.exists('save.csv'):
         with open('save.csv', 'r', encoding='utf8') as file:
             reader = csv.DictReader(file)
@@ -133,16 +136,18 @@ def ranking():
                     'Pontuação': int(row['Pontuação']),
                 }
                 player_data.append(player)
+        # Utiliza a função sorted para ordenar os jogadores através da pontuação
         sorted_players = sorted(player_data, key=lambda x: x['Pontuação'], reverse=True)
 
+    # Criando textos e botões
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 70)
              .render('Ranking', True, '#FFA756'))
     title_rect = title.get_rect(center=(500, 50))
-    menu_button = Button(None, 500, 750, "Main Menu", 'assets/pixeloid_sans.ttf', 30,
+    menu_button = TxtBtn(None, 500, 750, "Main Menu", 'assets/pixeloid_sans.ttf', 30,
                          "#FFA756", "White")
-    next_page_button = Button(None, 700, 400, "-->", 'assets/pixeloid_sans.ttf', 30,
+    next_page_button = TxtBtn(None, 700, 400, "-->", 'assets/pixeloid_sans.ttf', 30,
                               "#FFA756", "White")
-    prev_page_button = Button(None, 300, 400, "<--", 'assets/pixeloid_sans.ttf', 30,
+    prev_page_button = TxtBtn(None, 300, 400, "<--", 'assets/pixeloid_sans.ttf', 30,
                               "#FFA756", "White")
     current_page = 0
     players_per_page = 15
@@ -152,13 +157,16 @@ def ranking():
         display.fill((42, 1, 52))
         display.blit(title, title_rect)
 
+        # Index utilizado no enumerate para trazer apenas os jogadores que devem estar no range da página atual
         current_index = current_page * players_per_page
         final_index = (current_page + 1) * players_per_page
 
         if final_index > players_amount:
             final_index = players_amount
 
+        # Altura inicial do texto do ranking
         y = 200
+        # Loop para obter os players ordenados com colocação, nome e pontuação
         for rank, player in enumerate(sorted_players[current_index:final_index], start=current_index + 1):
             player_text = f'{rank}. {player["Nome"]}:'
             player_points_text = f'{player["Pontuação"]}pts'
@@ -193,6 +201,7 @@ def ranking():
 
 
 def name_screen(points):
+    # Parando a música quando o jogador perde
     pygame.mixer.music.stop()
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 100)
              .render('Salvar Partida', True, '#FFA756'))
@@ -223,13 +232,13 @@ def name_screen(points):
                 if event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                     # Adiciona na string o caractere capturado
-                elif len(user_text) <= 15:
+                elif len(user_text) <= 15 and event.key != pygame.K_RETURN:
                     user_text += event.unicode
 
             if not saved:
-                input_rect = Button('assets/nome_retangulo.png', 500, 250, user_text, 'assets/pixeloid_sans.ttf', 26,
+                input_rect = TxtBtn('assets/nome_retangulo.png', 500, 250, user_text, 'assets/pixeloid_sans.ttf', 26,
                                     "#FFA756", "#FFA756", (400, 70), 'assets/nome_retangulo.png')
-                save_rect = Button(None, 500, 400, "Continuar", 'assets/pixeloid_sans.ttf',
+                save_rect = TxtBtn(None, 500, 400, "Continuar", 'assets/pixeloid_sans.ttf',
                                    50, "#FFA756", "White")
 
                 # Ao clicar no botão, seu estado é alterado (selecionado)
@@ -260,24 +269,27 @@ def name_screen(points):
 
 
 def main_menu():
+    # Setando botões e textos na tela
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 100)
              .render('Recycle Rush', True, '#FFA756'))
     title_rect = title.get_rect(center=(500, 200))
-    play_button = Button('assets/btn_jogar1.png', 500, 400, None, 'assets/pixeloid_sans.ttf', 50,
+    play_button = TxtBtn('assets/btn_jogar1.png', 500, 400, None, 'assets/pixeloid_sans.ttf', 50,
                          "#FFA756", "white", (440, 135), 'assets/btn_jogar2.png')
-    ranking_button = Button('assets/btn_ranking1.png', 50, 50, None, 'assets/pixeloid_sans.ttf', 50,
+    ranking_button = TxtBtn('assets/btn_ranking1.png', 50, 50, None, 'assets/pixeloid_sans.ttf', 50,
                             "#FFA756", "white", (70, 70), 'assets/btn_ranking2.png')
-    quit_button = Button('assets/btn_shutdown1.png', 950, 750, None, 'assets/pixeloid_sans.ttf', 50,
+    quit_button = TxtBtn('assets/btn_shutdown1.png', 950, 750, None, 'assets/pixeloid_sans.ttf', 50,
                          "#FFA756", "white", (70, 70), 'assets/btn_shutdown2.png')
     while True:
         menu_mouse_pos = pygame.mouse.get_pos()
         display.fill((42, 1, 52))
         display.blit(title, title_rect)
 
+        # Alterando e atualizando botões
         for button in [play_button, ranking_button, quit_button]:
             button.change_state(menu_mouse_pos)
             button.update(display)
 
+        # Capturando eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()

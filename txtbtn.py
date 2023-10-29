@@ -1,7 +1,7 @@
 import pygame
 
 
-class Button(pygame.sprite.Sprite):
+class TxtBtn(pygame.sprite.Sprite):
     def __init__(self, img, x, y, text_input, font, size, base_color, hovering_color, img_size=None, img_hover=None):
         super().__init__()
 
