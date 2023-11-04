@@ -2,8 +2,8 @@ import pygame
 
 
 class TrashCan(pygame.sprite.Sprite):
-    def __init__(self, width, height, image, material=None, x_flip=0, y_flip=0, x=0, y=0):
-        super().__init__()
+    def __init__(self, *groups, width, height, image, material=None, x_flip=0, y_flip=0, x=0, y=0):
+        super().__init__(*groups)
 
         self.image = pygame.image.load(image).convert_alpha()
         self.image = pygame.transform.scale(self.image, (width, height))

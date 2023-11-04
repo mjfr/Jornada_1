@@ -8,6 +8,7 @@ from lixeira import TrashCan
 from lixos import Trash
 from placar import Placar
 from txtbtn import TxtBtn
+from carros import Carro
 import random
 
 # TODO: Refatorar o código se possível [em progresso]
@@ -39,6 +40,9 @@ def play():
     object_group = pygame.sprite.Group()
     placar = Placar()
     personagem = Personagem(object_group, placar=placar)
+    sprites_list4 = pygame.sprite.Group()
+    Carro(sprites_list4, character=object_group, pos_x=-100, pos_y=220, horizontal=True)
+    Carro(sprites_list4, character=object_group, pos_x=1100, pos_y=500, horizontal=True)
 
     # Criando os espaços dos obstáculos (casas e carros)
     sprites_list = pygame.sprite.Group()
@@ -64,16 +68,15 @@ def play():
 
     # Criando as lixeiras
     sprites_list2 = pygame.sprite.Group()
-    trashcans = [
-        TrashCan(32, 46, 'assets/lixeira_papel.png', x_flip=1, x=2, y=175, material=MATERIAL[0]),
-        TrashCan(32, 46, 'assets/lixeira_vidro.png', x_flip=1, x=2, y=530, material=MATERIAL[1]),
-        TrashCan(32, 46, 'assets/lixeira_organica.png', x=905, y=750, material=MATERIAL[2]),
-        TrashCan(32, 46, 'assets/lixeira_plastico.png', x=905, y=175, material=MATERIAL[3])
-        ]
+    TrashCan(sprites_list2, width=32, height=46, image='assets/lixeira_papel.png', x_flip=1, x=2, y=175,
+             material=MATERIAL[0]),
+    TrashCan(sprites_list2, width=32, height=46, image='assets/lixeira_vidro.png', x_flip=1, x=2, y=530,
+             material=MATERIAL[1]),
+    TrashCan(sprites_list2, width=32, height=46, image='assets/lixeira_organica.png', x=905, y=750,
+             material=MATERIAL[2]),
+    TrashCan(sprites_list2, width=32, height=46, image='assets/lixeira_plastico.png', x=905, y=175,
+             material=MATERIAL[3])
 
-    # Adicionando as lixeiras na lista de sprites
-    for trashcan in trashcans:
-        sprites_list2.add(trashcan)
     personagem.trashcan_group = sprites_list2
 
     sprites_list3 = pygame.sprite.Group()
@@ -82,7 +85,8 @@ def play():
     def create_trash():
         rng = random.randint(0, 3)
         rng_img = random.randint(0, 2)
-        trash = Trash(MATERIAL_IMG[rng][rng_img], 20, 20, sprites_list, sprites_list2)
+        trash = Trash(sprites_list3, image=MATERIAL_IMG[rng][rng_img], width=20, height=20,
+                      blockage_group=sprites_list, trash_can_group=sprites_list2)
         trash.material = MATERIAL[rng]
         trash.character_group = object_group
         return trash
@@ -103,11 +107,12 @@ def play():
 
         # Se a lista de assets de lixo estiver vazia, adiciona outro lixo ao mapa
         if not sprites_list3.sprites():
-            sprites_list3.add(create_trash())
+            create_trash()
 
         # Update:
         object_group.update()
         sprites_list3.update()
+        sprites_list4.update()
 
         # Draw:
         sprites_list.draw(display)
@@ -116,6 +121,7 @@ def play():
         placar.render(display)
         sprites_list3.draw(display)
         object_group.draw(display)
+        sprites_list4.draw(display)
         pygame.display.flip()
         pygame.display.update()
 

@@ -11,7 +11,7 @@ class Personagem(pygame.sprite.Sprite):
     def __init__(self, *groups, placar):
         super().__init__(*groups)
 
-        self.sprites2 = {
+        self.sprites = {
             'front': sprite_loader('assets/personagem_frente.png'),
             'back': sprite_loader('assets/personagem_costas.png'),
             pygame.K_w: [sprite_loader('assets/personagem_costas_1.png'), sprite_loader('assets/personagem_costas_2.png')],
@@ -31,13 +31,13 @@ class Personagem(pygame.sprite.Sprite):
         self.placar = placar
         self.e_key_pressed = False
         self.life = 3
-        self.image = pygame.transform.scale(self.sprites2['front'], [25, 50])
+        self.image = pygame.transform.scale(self.sprites['front'], [25, 50])
         self.rect = pygame.Rect(360, 370, 25, 50)
 
     def sprite_setter(self, key):
-        if self.current_sprite >= len(self.sprites2[key]):
+        if self.current_sprite >= len(self.sprites[key]):
             self.current_sprite = 0
-        self.image = pygame.transform.scale(self.sprites2[key][int(self.current_sprite)], [25, 50])
+        self.image = pygame.transform.scale(self.sprites[key][int(self.current_sprite)], [25, 50])
         self.current_sprite += 0.1
 
     # Atualiza os valores das velocidades de eixo, faz a lógica de limite de tela e move o personagem

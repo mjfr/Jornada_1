@@ -3,8 +3,8 @@ import random
 
 
 class Trash(pygame.sprite.Sprite):
-    def __init__(self, image, width, height, blockage_group, trash_can_group):
-        super().__init__()
+    def __init__(self, *groups, image, width, height, blockage_group, trash_can_group):
+        super().__init__(*groups)
 
         self.image = pygame.image.load(image).convert_alpha()
         # TODO: Ponderar sobre o tamanho ideal para o lixo
