@@ -11,9 +11,6 @@ from txtbtn import TxtBtn
 from carros import Carro
 import random
 
-# TODO: Refatorar o código se possível [em progresso]
-# TODO: TALVEZ a namescreen possa ser passada para uma classe
-
 # Cores para testes/debug
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -41,8 +38,8 @@ def play():
     placar = Placar()
     personagem = Personagem(object_group, placar=placar)
     sprites_list4 = pygame.sprite.Group()
-    Carro(sprites_list4, character=object_group, pos_x=-100, pos_y=220, horizontal=True)
-    Carro(sprites_list4, character=object_group, pos_x=1100, pos_y=500, horizontal=True)
+    Carro(sprites_list4, character=object_group, pos_x=-100, pos_y=230, horizontal=True)
+    Carro(sprites_list4, character=object_group, pos_x=1100, pos_y=505, horizontal=True)
 
     # Criando os espaços dos obstáculos (casas e carros)
     sprites_list = pygame.sprite.Group()
@@ -96,10 +93,10 @@ def play():
     pygame.mixer.music.play(-1)
 
     clock = pygame.time.Clock()
+    clock.tick(60)
 
     # Criando o botão de fechar no X
     while True:
-        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
