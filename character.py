@@ -7,7 +7,7 @@ def sprite_loader(path):
         return pygame.image.load(path).convert_alpha()
 
 
-class Personagem(pygame.sprite.Sprite):
+class Character(pygame.sprite.Sprite):
     def __init__(self, *groups, placar):
         super().__init__(*groups)
 

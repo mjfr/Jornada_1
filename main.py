@@ -2,13 +2,13 @@ import os.path
 import csv
 import pygame
 import sys
-from personagem import Personagem
+from character import Character
 from ambiente import Blockage
 from lixeira import TrashCan
 from lixos import Trash
 from placar import Placar
 from txtbtn import TxtBtn
-from carros import Carro
+from carros import Car
 import random
 
 # Cores para testes/debug
@@ -32,14 +32,22 @@ display = pygame.display.set_mode([1000, 800])
 pygame.display.set_caption("Recycle Rush")
 
 
-def play():
+def play() -> None:
+    """
+    Função que contém o loop principal do jogo.
+    A função possui três funcionalidades principais:
+        - Instanciação de objetos;
+        - Atualização das ações dos objetos;
+        - Atualização visual dos sprites dos objetos.
+    :return: None
+    """
     # Instanciando o jogador e o placar
     object_group = pygame.sprite.Group()
     placar = Placar()
-    personagem = Personagem(object_group, placar=placar)
+    character = Character(object_group, placar=placar)
     sprites_list4 = pygame.sprite.Group()
-    Carro(sprites_list4, character=object_group, pos_x=-100, pos_y=230, horizontal=True)
-    Carro(sprites_list4, character=object_group, pos_x=1100, pos_y=505, horizontal=True)
+    Car(sprites_list4, character=object_group, pos_x=-100, pos_y=230, horizontal=True)
+    Car(sprites_list4, character=object_group, pos_x=1100, pos_y=505, horizontal=True)
 
     # Criando os espaços dos obstáculos (casas e carros)
     sprites_list = pygame.sprite.Group()
@@ -61,7 +69,7 @@ def play():
     # Adicionando os bloqueios na lista de sprites
     for block in blockages:
         sprites_list.add(block)
-    personagem.blockage_group = sprites_list
+    character.blockage_group = sprites_list
 
     # Criando as lixeiras
     sprites_list2 = pygame.sprite.Group()
@@ -74,19 +82,23 @@ def play():
     TrashCan(sprites_list2, width=32, height=46, image='assets/lixeira_plastico.png', x=905, y=175,
              material=MATERIAL[3])
 
-    personagem.trashcan_group = sprites_list2
+    character.trashcan_group = sprites_list2
 
     sprites_list3 = pygame.sprite.Group()
 
     # Função para criar uma nova instância de lixo
-    def create_trash():
-        rng = random.randint(0, 3)
-        rng_img = random.randint(0, 2)
-        trash = Trash(sprites_list3, image=MATERIAL_IMG[rng][rng_img], width=20, height=20,
-                      blockage_group=sprites_list, trash_can_group=sprites_list2)
-        trash.material = MATERIAL[rng]
-        trash.character_group = object_group
-        return trash
+    # def create_trash() -> Trash:
+    #     """
+    #     Função auxiliar
+    #     :return:
+    #     """
+    #     rng = random.randint(0, 3)
+    #     rng_img = random.randint(0, 2)
+    #     trash = Trash(sprites_list3, image=MATERIAL_IMG[rng][rng_img], width=20, height=20,
+    #                   blockage_group=sprites_list, trash_can_group=sprites_list2)
+    #     trash.material = MATERIAL[rng]
+    #     trash.character_group = object_group
+    #     return trash
 
     # Música de fundo do jogo
     pygame.mixer.music.load("assets/Juhani Junkala [Chiptune Adventures] 1. Stage 1.wav")
@@ -104,7 +116,13 @@ def play():
 
         # Se a lista de assets de lixo estiver vazia, adiciona outro lixo ao mapa
         if not sprites_list3.sprites():
-            create_trash()
+            # create_trash()
+            rng = random.randint(0, 3)
+            rng_img = random.randint(0, 2)
+            trash = Trash(sprites_list3, image=MATERIAL_IMG[rng][rng_img], width=20, height=20,
+                          blockage_group=sprites_list, trash_can_group=sprites_list2)
+            trash.material = MATERIAL[rng]
+            trash.character_group = object_group
 
         # Update:
         object_group.update()
@@ -122,11 +140,15 @@ def play():
         pygame.display.flip()
         pygame.display.update()
 
-        if personagem.life == 0:
-            name_screen(personagem.placar.pontuacao)
+        if character.life == 0:
+            name_screen(character.placar.pontuacao)
 
 
-def ranking():
+def ranking() -> None:
+    """
+    Função que trata da interface de ranking e sua lógica.
+    :return: None
+    """
     player_data = []
     sorted_players = []
     # Se o arquivo de save existir, abre o arquivo e cria um dicionário para o player adicionando em uma lista
@@ -203,7 +225,12 @@ def ranking():
         pygame.display.update()
 
 
-def name_screen(points):
+def name_screen(points) -> None:
+    """
+    A função name_screen cria e administra a lógica da interface de salvamento de progresso da partida.
+    :param points: Pontuação pós-partida obtida através do atributo placar da instância de personagem
+    :return: None
+    """
     # Parando a música quando o jogador perde
     pygame.mixer.music.stop()
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 100)
@@ -271,7 +298,11 @@ def name_screen(points):
         pygame.display.update()
 
 
-def main_menu():
+def main_menu() -> None:
+    """
+    Função que cria e administra a lógica da interface inicial.
+    :return: None
+    """
     # Setando botões e textos na tela
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 100)
              .render('Recycle Rush', True, '#FFA756'))
