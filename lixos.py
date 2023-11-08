@@ -3,13 +3,17 @@ import random
 
 
 class Trash(pygame.sprite.Sprite):
-    def __init__(self, *groups, image, width, height, blockage_group, trash_can_group):
+    def __init__(self, *groups, image, blockage_group, trash_can_group):
+        """
+        Construtor da classe Trash.
+        :param object groups: Instância de pygame.sprite.Group() onde servirá de lista para as instâncias de Trash;
+        :param str image: Caminho do sistema para a imagem;
+        :param pygame.sprite.AbstractGroup blockage_group: Grupo de bloqueios da instância de Blockage;
+        :param pygame.sprite.AbstractGroup trash_can_group: Grupo de lixeiras da instância de TrashCan.
+        """
         super().__init__(*groups)
 
         self.image = pygame.image.load(image).convert_alpha()
-        # TODO: Ponderar sobre o tamanho ideal para o lixo
-        img_width = self.image.get_width()
-        img_height = self.image.get_height()
         self.image = pygame.transform.scale(self.image, (38, 33))
         self.blockage_group = blockage_group
         self.trash_can_group = trash_can_group
@@ -19,7 +23,11 @@ class Trash(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.spawn_trash()
 
-    def update(self):
+    def update(self) -> None:
+        """
+        Função de atualização das funções do objeto.
+        :return: None
+        """
         keys = pygame.key.get_pressed()
         # Verificando se o personagem colidiu com o lixo e apertou a tecla de ação
         if pygame.sprite.spritecollide(self, self.character_group, False) and keys[pygame.K_e]:
@@ -31,7 +39,11 @@ class Trash(pygame.sprite.Sprite):
                 # TODO: Fazer com que haja algum aviso, seja visual ou auditivo para indicar
                 print("Pode segurar apenas um lixo")
 
-    def spawn_trash(self):
+    def spawn_trash(self) -> None:
+        """
+        Função para criar lixos em uma posição aleatória
+        :return: None
+        """
         # Enquanto o lixo não estiver em uma área disponível para spawn, ele terá sua posição alterada
         while True:
             self.rect.x = random.randint(20, 800)

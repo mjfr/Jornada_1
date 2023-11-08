@@ -21,15 +21,14 @@ CARS_IMG = [RED_CAR, YELLOW_CAR, BLUE_CAR, PURPLE_CAR]
 
 
 class Car(pygame.sprite.Sprite):
-    def __init__(self, *groups, character, pos_x, pos_y, horizontal=False, vertical=False) -> None:
+    def __init__(self, *groups, character, pos_x, pos_y, horizontal=False, vertical=False):
         """
         Construtor da classe Car.
-        :param object groups: É passada uma instância de pygame.sprite.Group() onde servirá de lista
-         para as instâncias de Car;
+        :param object groups: Instância de pygame.sprite.Group() onde servirá de lista para as instâncias de Car;
         :param character: A instância de Character;
         :param int pos_x: Posição horizontal. Quanto menor o valor de 'x' mais à esquerda estará, quanto maior, mais à
-         direita.
-        :param int pos_y: Posição vertical. Quanto menor o 'y' mais acima estará, quanto maior, mais abaixo.
+         direita;
+        :param int pos_y: Posição vertical. Quanto menor o 'y' mais acima estará, quanto maior, mais abaixo;
         :param bool horizontal: Boolean para definição do movimento inicial do objeto. Por padrão False;
         :param bool vertical: Boolean para definição do movimento inicial do objeto. Por padrão False.
         """
@@ -69,7 +68,7 @@ class Car(pygame.sprite.Sprite):
 
     def move(self, backwards=False) -> None:
         """
-        Função
+        Função que define o movimento do objeto.
         :param bool backwards: Parâmetro que define se o movimento será contrário (direta-esquerda ou baixo-cima), por
          padrão False.
         :return: None

@@ -2,7 +2,7 @@ import pygame
 
 
 class Blockage(pygame.sprite.Sprite):
-    def __init__(self, color, width, height, x=0, y=0) -> None:
+    def __init__(self, color, width, height, x=0, y=0):
         """
         Construtor da classe Blockage.
         :param tuple color: Cor definida em tupla tripla, formato RGB. Útil para posicionamento ao sobrepor o plano de

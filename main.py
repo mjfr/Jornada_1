@@ -119,7 +119,7 @@ def play() -> None:
             # create_trash()
             rng = random.randint(0, 3)
             rng_img = random.randint(0, 2)
-            trash = Trash(sprites_list3, image=MATERIAL_IMG[rng][rng_img], width=20, height=20,
+            trash = Trash(sprites_list3, image=MATERIAL_IMG[rng][rng_img],
                           blockage_group=sprites_list, trash_can_group=sprites_list2)
             trash.material = MATERIAL[rng]
             trash.character_group = object_group
@@ -158,7 +158,7 @@ def ranking() -> None:
             for row in reader:
                 player = {
                     'Nome': row['Nome'],
-                    'Pontuação': int(row['Pontuação']),
+                    'Pontuação': int(row['Pontuação'])
                 }
                 player_data.append(player)
         # Utiliza a função sorted para ordenar os jogadores através da pontuação
