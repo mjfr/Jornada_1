@@ -14,11 +14,14 @@ class Placar:
 
     def incrementar_pontuacao(self, pontos) -> None:
         """
-        Função que incrementa o atributo pontuacao.
+        Função que incrementa o atributo pontuacao de acordo com a pontuação geral.
         :param int pontos: Quantidade de pontos a serem incrementados.
         :return: None
         """
-        self.pontuacao += pontos
+        if self.pontuacao == 0:
+            self.pontuacao += pontos
+        else:
+            self.pontuacao += (pontos * -(-self.pontuacao//10))
 
     def obter_pontuacao(self) -> int:
         """
@@ -51,8 +54,8 @@ class Placar:
 
     def decrementar_pontuacao(self, pontos) -> None:
         """
-        Função que decrementa o valor do atributo pontuacao.
+        Função que decrementa o valor do atributo pontuacao de acordo com a pontuação geral.
         :param int pontos: Quantidade de pontos a serem decrementados;
         :return: None
         """
-        self.pontuacao -= pontos
+        self.pontuacao -= (pontos * -(-self.pontuacao//10))

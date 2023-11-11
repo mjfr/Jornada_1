@@ -139,6 +139,8 @@ class Character(pygame.sprite.Sprite):
                 if self.holding == trashcan.material:
                     self.placar.incrementar_pontuacao(1)  # Adicione 1 ponto (ou a quantidade desejada)
                     self.holding = None
+                    if self.speed >= 2:
+                        self.speed *= 0.99
                 elif self.holding is not None:
                     self.holding = None
                     self.placar.decrementar_pontuacao(1)

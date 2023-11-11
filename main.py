@@ -25,6 +25,18 @@ MATERIAL_IMG = [PAPER_IMG, GLASS_IMG, ORGANIC_IMG, PLASTIC_IMG]
 
 BACKGROUND = pygame.image.load('assets/mapa_pronto.png')
 
+INSTRUCTION_TEXT = ('No Recycle Rush você tem o objetivo de manter seu bairro limpo\n'
+                    'e para isso, você deve coletar os lixos e descartá-los nas lixeiras corretas.\n Tome cuidado com '
+                    'os carros, ao ser atingido, você perderá uma vida.\n\nLembre-se das combinações de lixos e '
+                    'lixeiras:\nPapeis = Azul;\nPlásticos = Vermelho;\nVidros = Verde;\nOrgânicos = Marrom.\n\n'
+                    'Para controlar e realizar as ações do personagem, utilize as teclas:\nW: Andar para cima;\n'
+                    'A: Andar para a esquerda;\nS: Andar para baixo;\nD: Andar para a direita;\n'
+                    'E: Pegar/descartar o lixo.\n\nA partir de 11 pontos, você começará uma sequência ganhando pontos\n'
+                    'bônus, porém perderá mais pontos ao errar o descarte do lixo.\n'
+                    'Quanto mais lixos acertar, mais lento seu personagem ficará, exigindo\num cuidado maior ao '
+                    'atravessar as ruas.\n\nNo mais, desejamos boa sorte, bom jogo e esperamos que goste do nosso '
+                    'trabalho! :)')
+
 # Inicializando o Pygame e Criando a Janela do Jogo
 pygame.init()
 RANKING_FONT = pygame.font.Font('assets/pixeloid_sans.ttf', 18)
@@ -168,7 +180,7 @@ def ranking() -> None:
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 70)
              .render('Ranking', True, '#FFA756'))
     title_rect = title.get_rect(center=(500, 50))
-    menu_button = TxtBtn(None, 500, 750, "Main Menu", 'assets/pixeloid_sans.ttf', 30,
+    menu_button = TxtBtn(None, 500, 750, "Menu Principal", 'assets/pixeloid_sans.ttf', 30,
                          "#FFA756", "White")
     next_page_button = TxtBtn(None, 700, 400, "-->", 'assets/pixeloid_sans.ttf', 30,
                               "#FFA756", "White")
@@ -298,6 +310,50 @@ def name_screen(points) -> None:
         pygame.display.update()
 
 
+def message_display(text_line_height) -> None:
+    """
+    Função que realiza a quebra de linha do texto utilizado na interface de instruções.
+    :param int text_line_height: A altura inicial da linha de texto a ser renderizada em tela.
+    :return: None
+    """
+    for text_line in INSTRUCTION_TEXT.split('\n'):
+        render = RANKING_FONT.render(text_line, True, '#FFA756')
+        display.blit(render, (render.get_rect(center=(500, text_line_height))))
+        text_line_height += 25
+    pygame.display.update()
+
+
+def instructions() -> None:
+    """
+    Função que cria e administra a lógica da interface de instruções.
+    :return: None
+    """
+    title = (pygame.font.Font('assets/pixeloid_sans.ttf', 50)
+             .render('Instruções', True, '#FFA756'))
+    title_rect = title.get_rect(center=(500, 50))
+    menu_button = TxtBtn(None, 500, 750, "Menu Principal", 'assets/pixeloid_sans.ttf', 25,
+                         "#FFA756", "White")
+
+    while True:
+        mouse_pos = pygame.mouse.get_pos()
+        display.fill((42, 1, 52))
+        display.blit(title, title_rect)
+
+        # Alterando e atualizando botões
+        menu_button.change_state(mouse_pos)
+        menu_button.update(display)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if menu_button.check_click(mouse_pos):
+                    main_menu()
+
+        message_display(130)
+
+
 def main_menu() -> None:
     """
     Função que cria e administra a lógica da interface inicial.
@@ -307,19 +363,21 @@ def main_menu() -> None:
     title = (pygame.font.Font('assets/pixeloid_sans.ttf', 100)
              .render('Recycle Rush', True, '#FFA756'))
     title_rect = title.get_rect(center=(500, 200))
-    play_button = TxtBtn('assets/btn_jogar1.png', 500, 400, None, 'assets/pixeloid_sans.ttf', 50,
-                         "#FFA756", "white", (440, 135), 'assets/btn_jogar2.png')
-    ranking_button = TxtBtn('assets/btn_ranking1.png', 50, 50, None, 'assets/pixeloid_sans.ttf', 50,
-                            "#FFA756", "white", (70, 70), 'assets/btn_ranking2.png')
-    quit_button = TxtBtn('assets/btn_shutdown1.png', 950, 750, None, 'assets/pixeloid_sans.ttf', 50,
-                         "#FFA756", "white", (70, 70), 'assets/btn_shutdown2.png')
+    play_button = TxtBtn('assets/btn_jogar1.png', 500, 400, None, 'assets/pixeloid_sans.ttf', 50, "#FFA756", "white",
+                         (440, 135), 'assets/btn_jogar2.png')
+    ranking_button = TxtBtn('assets/btn_ranking1.png', 50, 50, None, 'assets/pixeloid_sans.ttf', 50, "#FFA756", "white",
+                            (70, 70), 'assets/btn_ranking2.png')
+    quit_button = TxtBtn('assets/btn_shutdown1.png', 950, 750, None, 'assets/pixeloid_sans.ttf', 50, "#FFA756", "white",
+                         (70, 70), 'assets/btn_shutdown2.png')
+    instructions_button = TxtBtn('assets/btn_instrucao1.png', 50, 750, None, 'assets/pixeloid_sans.ttf', 50, "#FFA756",
+                                 "white", (70, 70), 'assets/btn_instrucao2.png')
     while True:
         menu_mouse_pos = pygame.mouse.get_pos()
         display.fill((42, 1, 52))
         display.blit(title, title_rect)
 
         # Alterando e atualizando botões
-        for button in [play_button, ranking_button, quit_button]:
+        for button in [play_button, ranking_button, quit_button, instructions_button]:
             button.change_state(menu_mouse_pos)
             button.update(display)
 
@@ -333,6 +391,8 @@ def main_menu() -> None:
                     play()
                 if ranking_button.check_click(menu_mouse_pos):
                     ranking()
+                if instructions_button.check_click(menu_mouse_pos):
+                    instructions()
                 if quit_button.check_click(menu_mouse_pos):
                     pygame.quit()
                     sys.exit()
