@@ -98,20 +98,6 @@ def play() -> None:
 
     sprites_list3 = pygame.sprite.Group()
 
-    # Função para criar uma nova instância de lixo
-    # def create_trash() -> Trash:
-    #     """
-    #     Função auxiliar
-    #     :return:
-    #     """
-    #     rng = random.randint(0, 3)
-    #     rng_img = random.randint(0, 2)
-    #     trash = Trash(sprites_list3, image=MATERIAL_IMG[rng][rng_img], width=20, height=20,
-    #                   blockage_group=sprites_list, trash_can_group=sprites_list2)
-    #     trash.material = MATERIAL[rng]
-    #     trash.character_group = object_group
-    #     return trash
-
     # Música de fundo do jogo
     pygame.mixer.music.load("assets/Juhani Junkala [Chiptune Adventures] 1. Stage 1.wav")
     pygame.mixer.music.play(-1)
