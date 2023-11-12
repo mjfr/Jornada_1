@@ -7,10 +7,11 @@ O objetivo principal do jogo é coletar e descartar o maior número de lixos cor
 
 ## Interfaces:
 O jogo conta com quatro interfaces, são elas:
-1. Menu Principal
-2. O jogo propriamente dito
-3. Tela de input para salvar o progresso
-4. Tela de ranking
+1. Interface do Menu Principal
+2. Interface de instruções
+3. Interface do jogo propriamente dito
+4. Interface de input para salvar o progresso
+5. Interface de ranking
 
 ## Informações adicionais:
 - O jogo foi desenvolvido com POO (Programação Orientada a Objetos) para uma maior modularidade, organização e fácil compreensão do código;
